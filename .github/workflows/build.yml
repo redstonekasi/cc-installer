@@ -1,0 +1,30 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Zig
+        uses: goto-bus-stop/setup-zig@v1
+        with:
+          version: master
+
+      - name: Build
+        run: zig build --build-file "build-all.zig"
+
+      - name: Release
+        run: |
+          git tag --delete release || true
+          git push origin --delete release || true
+          git tag release
+          git push origin release
+          gh release delete release -y || true
+          gh release create release -t "Release" -n "$(git rev-parse HEAD | cut -c 1-7) | $(git log -1 --pretty=%B)" zig-out/bin/*
