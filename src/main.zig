@@ -5,6 +5,7 @@ const log = std.log;
 const process = std.process;
 const fs = std.fs;
 const path = std.fs.path;
+const mem = std.mem;
 
 const OpenError = fs.File.OpenError;
 
@@ -84,6 +85,23 @@ pub fn main() !void {
 
             log.err("unable to find app directory", .{});
             process.exit(1);
+        },
+        .macos => brk: {
+            const discord_name: []const u8 = if (args.len < 3) "Discord" else switch (args[2][0]) {
+                's' => "Discord",
+                'p' => "Discord Ptb",
+                'c' => "Discord Canary",
+                'd' => "Discord Development",
+                else => {
+                    log.info("{s}", .{usage});
+                    log.err("invalid branch", .{});
+                    process.exit(1);
+                },
+            };
+
+            const discord_folder = try mem.join(arena, "", &[_][]const u8{ discord_name, ".app" });
+
+            break :brk try path.join(arena, &[_][]const u8{ "/Applications", discord_folder, "Contents", "Resources" });
         },
         else => @compileError("unsupported operating system"), // todo: add macos suppport
     };
