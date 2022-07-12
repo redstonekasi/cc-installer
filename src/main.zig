@@ -136,7 +136,7 @@ fn install(arena: std.mem.Allocator, resources_path: []const u8) !void {
     const app_index_path = try path.join(arena, &[_][]const u8{ app_folder_path, "index.js" });
     const app_package_path = try path.join(arena, &[_][]const u8{ app_folder_path, "package.json" });
 
-    log.info("installing to {s}", .{path});
+    log.info("installing to {s}", .{resources_path});
 
     try fs.makeDirAbsolute(app_folder_path);
 
