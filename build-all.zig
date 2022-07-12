@@ -27,6 +27,14 @@ const targets = [_]BuildTarget{
         },
         .mode = Mode.ReleaseSafe,
     },
+    .{
+        .name = "cumcord-x86_64-macos",
+        .cross_target = CrossTarget{
+            .cpu_arch = Target.Cpu.Arch.x86_64,
+            .os_tag = Target.Os.Tag.macos,
+        },
+        .mode = Mode.ReleaseSafe,
+    },
 };
 
 pub fn build(b: *std.build.Builder) void {
