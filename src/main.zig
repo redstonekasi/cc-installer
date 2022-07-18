@@ -41,7 +41,7 @@ pub fn main() !void {
 
             const discord_path = try path.join(arena, &[_][]const u8{ local_app_data, discord_name });
 
-            var discord_dir = fs.openDirAbsolute(discord_path, .{ .iterate = true }) catch |err| {
+            var discord_dir = fs.openIterableDirAbsolute(discord_path, .{}) catch |err| {
                 switch (err) {
                     OpenError.FileNotFound => log.err("could not find discord installation ({s})", .{discord_name}),
                     OpenError.AccessDenied => log.err("could not access discord, insufficient permissions", .{}),
